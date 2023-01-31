@@ -30,6 +30,30 @@ export class PermissionGuard implements CanActivate {
       return false;
     }
 
+    return this.checkUserPermission(permissions, user.permission);
+  }
+
+  private checkUserPermission(
+    permission: UserPermission[],
+    userPermission: UserPermission[],
+  ) {
+    for (const p of permission) {
+      const up = userPermission.find((v) => v.table === p.table);
+
+      if (!up) {
+        return false;
+      }
+
+      for (let i = 0; i < 3; i++) {
+        const x = +Number(p.allow[i]).toString(2);
+        const y = +Number(up.allow[i]).toString(2);
+
+        if ((x & y) < x) {
+          return false;
+        }
+      }
+    }
+
     return true;
   }
 }

@@ -14,6 +14,7 @@ import { EntityManager } from 'typeorm';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { Permission } from 'src/common/decorators/permission.decorator';
 import { PermissionGuard } from 'src/common/guards/permission.guard';
+import { userFindAllPermission } from './interfaces/user.permission';
 
 @UseGuards(JwtAuthGuard, PermissionGuard)
 @Controller('user')
@@ -24,7 +25,7 @@ export class UserController {
   ) {}
 
   @Get('/')
-  @Permission({ table: 'user', permission: '440' })
+  @Permission(...userFindAllPermission)
   @UseInterceptors(TransactionInterceptor)
   async findAll(@TransactionManager() manager: EntityManager): Promise<User> {
     return await this.userService.findOneWithTransaction({}, manager);
