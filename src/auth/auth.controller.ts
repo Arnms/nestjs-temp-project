@@ -10,7 +10,8 @@ import {
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from '../common/guards/local-auth.guard';
 import { Request } from 'express';
-import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { User } from 'src/modules/user/entities/user.entity';
+import { RefreshAuthGuard } from 'src/common/guards/refresh-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -22,12 +23,20 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Req() req: Request) {
-    return this.authService.login(req.user);
+    return this.authService.login(req.user as User);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get('user')
-  getUser(@Req() req: Request) {
-    return req.user;
+  @UseGuards(RefreshAuthGuard)
+  @Get('refresh')
+  async refreshToken(@Req() req: Request) {
+    const userId = req.user['sub'];
+    const accessToken = req.user['accessToken'];
+    const refreshToken = req.user['refreshToken'];
+
+    return await this.authService.refreshToken(
+      userId,
+      accessToken,
+      refreshToken,
+    );
   }
 }

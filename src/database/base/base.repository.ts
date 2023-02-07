@@ -45,4 +45,14 @@ export class BaseRepository<T extends Base> extends Repository<T> {
       ? manager.find(this.getTarget(), options)
       : this.find(options);
   }
+
+  updateTransaction(
+    options: any,
+    entity: Pick<T, string>,
+    manager?: EntityManager,
+  ) {
+    return manager
+      ? manager.update(this.getTarget(), options, entity)
+      : this.update(options, entity);
+  }
 }

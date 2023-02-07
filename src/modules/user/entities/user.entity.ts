@@ -41,6 +41,9 @@ export class User extends Base {
   })
   permission: UserPermission[];
 
+  @Column('text', { name: 'refresh_token' })
+  refreshToken: string;
+
   @CreateDateColumn({ type: 'datetime', name: 'created_at' })
   createdAt: Date;
 

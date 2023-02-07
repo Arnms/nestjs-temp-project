@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { User } from './entities/user.entity';
-import { EntityManager, FindOneOptions } from 'typeorm';
+import { EntityManager, FindOneOptions, FindOptionsWhere } from 'typeorm';
 import { BaseService } from 'src/database/base/base.service';
+import { UpdateUserDto } from './interfaces/user.dto';
 
 @Injectable()
 export class UserService extends BaseService<User> {
@@ -28,5 +29,13 @@ export class UserService extends BaseService<User> {
 
   findAll(): Promise<User[]> {
     return this.userRepository.find();
+  }
+
+  update(
+    options: FindOptionsWhere<User>,
+    entity: UpdateUserDto,
+    manager?: EntityManager,
+  ) {
+    return this.userRepository.updateTransaction(options, entity, manager);
   }
 }
