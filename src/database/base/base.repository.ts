@@ -1,14 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import {
+  DeleteResult,
   EntityManager,
   EntityTarget,
   FindManyOptions,
   FindOptionsWhere,
   In,
+  InsertResult,
   Repository,
   SelectQueryBuilder,
+  UpdateResult,
 } from 'typeorm';
 import { Base } from './base.entity';
+import { Criteria } from '../interfaces/database.dto';
 
 @Injectable()
 export class BaseRepository<T extends Base> extends Repository<T> {
@@ -26,6 +30,12 @@ export class BaseRepository<T extends Base> extends Repository<T> {
 
   private getTarget(): EntityTarget<T> {
     return this.repository.target;
+  }
+
+  async returningEntity(
+    result: Promise<InsertResult> | Promise<UpdateResult>,
+  ): Promise<T> {
+    return (await result)?.raw?.[0];
   }
 
   getById(id: number, manager?: EntityManager): Promise<T> {
@@ -46,13 +56,31 @@ export class BaseRepository<T extends Base> extends Repository<T> {
       : this.find(options);
   }
 
-  updateTransaction(
-    options: any,
+  insertTransaction(
     entity: Pick<T, string>,
     manager?: EntityManager,
-  ) {
+  ): Promise<InsertResult> {
+    return manager
+      ? manager.insert(this.getTarget(), entity)
+      : this.insert(entity);
+  }
+
+  updateTransaction(
+    options: Criteria,
+    entity: Pick<T, string>,
+    manager?: EntityManager,
+  ): Promise<UpdateResult> {
     return manager
       ? manager.update(this.getTarget(), options, entity)
       : this.update(options, entity);
+  }
+
+  deleteTransaction(
+    options: Criteria,
+    manager?: EntityManager,
+  ): Promise<DeleteResult> {
+    return manager
+      ? manager.delete(this.getTarget(), options)
+      : this.delete(options);
   }
 }

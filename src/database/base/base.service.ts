@@ -11,7 +11,7 @@ export class BaseService<T extends Base> {
     return this.repository.getById(id, manager);
   }
 
-  getByIds(ids: number[], manager?: EntityManager) {
+  getByIds(ids: number[], manager?: EntityManager): Promise<T[]> {
     return this.repository.getByIds(ids, manager);
   }
 }
