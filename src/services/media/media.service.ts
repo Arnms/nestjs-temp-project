@@ -14,8 +14,6 @@ export class MediaService {
     this.bucket = configService.get('S3_BUCKET_NAME');
     s3.config.update({
       region: configService.get('AWS_REGION'),
-      accessKeyId: configService.get('S3_ACCESS_KEY_ID'),
-      secretAccessKey: configService.get('S3_SECRET_ACCESS_KEY'),
     });
   }
 

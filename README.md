@@ -7,8 +7,9 @@
 
 ### Prerequisites
 
-- Yarn >= 1.22.19
-- Nest CLI >= 9.1.5
+- node >= 18.15.0
+- npm >= 9.5.0
+- Nest CLI >= 10.1.9
 
 ### Dependencies
 

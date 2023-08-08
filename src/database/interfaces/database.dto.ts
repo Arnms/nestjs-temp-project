@@ -1,12 +1,12 @@
-import { FindOptionsWhere, ObjectID } from 'typeorm';
+import { FindOptionsWhere, ObjectId } from 'typeorm';
 
 export type Criteria =
   | string
   | number
   | FindOptionsWhere<any>
   | Date
-  | ObjectID
+  | ObjectId
   | number[]
   | string[]
   | Date[]
-  | ObjectID[];
+  | ObjectId[];
